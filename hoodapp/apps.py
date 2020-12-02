@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class HoodConfig(AppConfig):
-    name = 'hood'
+    name = 'hoodapp'
