@@ -42,4 +42,4 @@ class HoodSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model=Post
-        fields=['description', 'post-image', 'categories']
+        fields=['description', 'post_image', 'categories']

@@ -34,4 +34,4 @@ class PostList(APIView):
         if serializerdata.is_valid():
             serializerdata.save()
             return Response(serializerdata.data, status.HTTP_201_CREATED)
-        return Response(serializerdata.errors, status=status.HTTP_400_BAD_REQUEST))
+        return Response(serializerdata.errors, status=status.HTTP_400_BAD_REQUEST)
