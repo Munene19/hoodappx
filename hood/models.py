@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 
@@ -7,7 +9,7 @@ class Neighborhood(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100, null=True)
     posted_by =  models.CharField(max_length=100, null=True)
-    count = models.CharField(max_length=100)
+    count = models.IntegerField(max_length=100)
     police = models.CharField(max_length=100)
     police_department_address = models.CharField(max_length=100)
     health = models.CharField(max_length=100)
@@ -49,7 +51,7 @@ class Neighborhood(models.Model):
 class Business(models.Model):
     business_name = models.CharField(max_length=100, unique= True)
     business_user = models.ForeignKey(User,on_delete=models.CASCADE)
-    business_neighborhood = models.ForeignKey(Neighborhood, null=True)
+    business_neighborhood = models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE) 
     business_email = models.EmailField(max_length=100, unique= True) 
     
     
@@ -78,10 +80,10 @@ class Business(models.Model):
 
 
 class Profile(models.Model):
-    profile_pic = models.ImageField(upload_to = 'images/',default='images/christine.jpg')
+    profile_pic = CloudinaryField('image')
     bio = models.TextField()
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-    neighborhood = models.ForeignKey(Neighborhood,null=True, related_name='population')
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    neighborhood = models.ForeignKey(Neighborhood,null=True, related_name='population', on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.user.username} Profile'
@@ -96,18 +98,44 @@ class Profile(models.Model):
         search_result = cls.objects.filter(user__username__icontains=search_term)
         return search_result
 
+    @classmethod
+    def update_profile(cls,id,value):
+        cls.objects.filter(id=id).update(user_id = new_user)
+
+    
     def save_profile(self):
         self.save()
+
+    def delete_profile(self):
+        self.delete()
+
+    def __str__(self):
+        return self.user
+
+    # def save_profile(self):
+    #     self.save()
+
+    # def create_user_profile(sender, instance, created, **kwargs):
+	#     if created:
+	# 	    Profile.objects.create(user=instance)
+        
+    # def save_user_profile(sender, instance, **kwargs):
+    #     instance.profile.save()
+        
+        
+    #     post_save.connect(create_user_profile, sender=User)
+    #     post_save.connect(save_user_profile, sender=User)
+
 
 
 class Post(models.Model):
     description =  models.CharField(max_length=70)
-    post_image = models.ImageField(upload_to='images/', null=True,blank=True)
+    post_image = CloudinaryField('image')
     categories = models.CharField(max_length=70)
     time_created =  models.DateTimeField(auto_now=True, null =True)
-    location=models.ForeignKey(Neighborhood)
-    user = models.ForeignKey(User, null=True)
-    user_profile = models.ForeignKey(Profile)
+    location=models.ForeignKey(Neighborhood, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.description
