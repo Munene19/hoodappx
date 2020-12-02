@@ -9,7 +9,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ['url', 'username', 'email', 'is_staff','password']
 
-        def create(self, validated-data):
+        def create(self, validated_data):
             validated_data['password']= make_password(validated_data.get('password'))
             return super(UserSerializer, self).create(validated_data)
 
@@ -30,4 +30,4 @@ class UserRegistrationSerializer(serializers.HyperlinkedModelSerializer):
         if not data.get('password') or not data.get('confPass'):
             raise serializers.ValidationError('Enter a password and confirm it')
         if data.get('password') != data.get('confPass'):
-            raise serializers.ValidationError('The passwords don't match)
+            raise serializers.ValidationError("'The passwords don't match")

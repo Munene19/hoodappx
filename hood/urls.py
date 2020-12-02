@@ -18,7 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include("hoodapp.urls")),
+    path('', include("hoodapp.urls")),
 ]
 
 admin.site.index_title="The Hoodappx"

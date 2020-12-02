@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -7,7 +8,7 @@ class Neighborhood(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100, null=True)
     posted_by =  models.CharField(max_length=100, null=True)
-    count = models.IntegerField(max_length=100)
+    count = models.IntegerField()
     police = models.CharField(max_length=100)
     police_department_address = models.CharField(max_length=100)
     health = models.CharField(max_length=100)
@@ -78,7 +79,7 @@ class Business(models.Model):
 
 
 class Profile(models.Model):
-    profile_pic = models.ImageField(upload_to = 'images/',default='images/christine.jpg')
+    profile_pic =CloudinaryField('image')
     bio = models.TextField()
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     neighborhood = models.ForeignKey(Neighborhood,null=True, related_name='population', on_delete=models.CASCADE)
@@ -102,7 +103,7 @@ class Profile(models.Model):
 
 class Post(models.Model):
     description =  models.CharField(max_length=70)
-    post_image = models.ImageField(upload_to='images/', null=True,blank=True)
+    post_image = CloudinaryField('image')
     categories = models.CharField(max_length=70)
     time_created =  models.DateTimeField(auto_now=True, null =True)
     location=models.ForeignKey(Neighborhood, on_delete=models.CASCADE)
