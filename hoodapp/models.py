@@ -106,9 +106,9 @@ class Post(models.Model):
     post_image = CloudinaryField('image')
     categories = models.CharField(max_length=70)
     time_created =  models.DateTimeField(auto_now=True, null =True)
-    location=models.ForeignKey(Neighborhood, on_delete=models.CASCADE)
+    location=models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    user_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user_profile = models.ForeignKey(Profile, null=True, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.description

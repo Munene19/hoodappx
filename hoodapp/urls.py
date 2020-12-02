@@ -5,8 +5,12 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from rest_framework import routers 
 from .views import UserViewSet
+from knox import views as knox_views
+from .views import LoginAPI
+
 router=routers.DefaultRouter(trailing_slash=False)
 router.register('users', UserViewSet)
+
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -38,6 +42,9 @@ urlpatterns = [
     path('api/v1/', include(router.urls)),
     path('hoods/',views.HoodList.as_view()),
     path('api/v1/post/',views.PostList.as_view()),
+    path('api/login/', LoginAPI.as_view(), name='login'),
+    path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
+    path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
 ]
 
 if settings.DEBUG:

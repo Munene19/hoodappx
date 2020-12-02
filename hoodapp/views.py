@@ -9,6 +9,9 @@ from rest_framework.permissions import AllowAny
 from .models import Profile, Neighborhood, Post
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from knox.views import LoginView as KnoxLoginView
+from django.contrib.auth import login
 
 def index(request):
     posts=Post.objects.all()
@@ -29,9 +32,19 @@ class HoodList(APIView):
         return Response(serializerdata.data)
 
 class PostList(APIView):
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         serializerdata=PostSerializer(data=request.data)
         if serializerdata.is_valid():
             serializerdata.save()
             return Response(serializerdata.data, status.HTTP_201_CREATED)
         return Response(serializerdata.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LoginAPI(KnoxLoginView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return super(LoginAPI, self).post(request, format=None)
