@@ -7,6 +7,7 @@ from rest_framework import routers
 from .views import UserViewSet
 router=routers.DefaultRouter(trailing_slash=False)
 router.register('users', UserViewSet)
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -32,8 +33,10 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/signup/', userSignup, name='user_signup'),
     path('auth/login/', userLogin, name='user_login'),
+    path('auth/refresh-token/', refresh_jwt_token),
     path('users/<int:pk>/', userDetail, name='user-detail'),
     path('api/v1/', include(router.urls)),
+    path('hoods/',views.HoodList.as_view()),
 ]
 
 if settings.DEBUG:

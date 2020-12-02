@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from rest_framework import viewsets
+from .models import Neighborhood, Profile, Post
+
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -31,3 +33,13 @@ class UserRegistrationSerializer(serializers.HyperlinkedModelSerializer):
             raise serializers.ValidationError('Enter a password and confirm it')
         if data.get('password') != data.get('confPass'):
             raise serializers.ValidationError("'The passwords don't match")
+
+class HoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  Neighborhood
+        fields = ['name', 'location', 'count'] 
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Post
+        fields=['description', 'post-image', 'categories']
