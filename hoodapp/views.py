@@ -12,10 +12,23 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 from django.contrib.auth import login
+from .permissions import IsAdminOrReadOnly
 
 def index(request):
     posts=Post.objects.all()
     return render(request, 'index.html')
+
+class IsAssigned(permissions.BasePermission): 
+    """
+    Only person who assigned has permission
+    """
+
+    def has_object_permission(self, request, view, obj):
+		# check if user who launched request is object owner 
+        if obj.assigned_to == request.user: 
+            return True
+
+        return False
     
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -24,6 +37,25 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     # permission_classes = [permissions.IsAuthenticated]
+
+class ProfileList(APIView):
+    permission_classes = (IsAdminOrReadOnly,)
+
+
+    def get_profile(self, pk):
+        try:
+            return Profile.objects.get(pk=pk)
+        except Profile.DoesNotExist:
+            return Http404
+
+    def patch(self, request, pk, format=None):
+        profile = self.get_profile(pk)
+        serializers = ProfileSerializer(profile, request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class HoodList(APIView):
     def get(self,request,format = None):
