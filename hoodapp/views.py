@@ -8,7 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 
 def index(request):
-    posts=Posts.objects.all()
+    posts=Post.objects.all()
     return render(request, 'index.html')
     
 class UserViewSet(viewsets.ModelViewSet):

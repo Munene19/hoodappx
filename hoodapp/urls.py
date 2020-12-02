@@ -7,6 +7,10 @@ from rest_framework import routers
 from .views import UserViewSet
 router=routers.DefaultRouter(trailing_slash=False)
 router.register('users', UserViewSet)
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 userSignup=UserViewSet.as_view({
     'get':'list',
@@ -23,7 +27,9 @@ userDetail=UserViewSet.as_view({
 })
 
 urlpatterns = [
-    path('index',views.index),
+    path('',views.index),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/signup/', userSignup, name='user_signup'),
     path('auth/login/', userLogin, name='user_login'),
     path('users/<int:pk>/', userDetail, name='user-detail'),
