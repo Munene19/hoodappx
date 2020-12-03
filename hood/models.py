@@ -2,7 +2,6 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from django.contrib.auth.models import User
 from django.dispatch import receiver
 
 # Create your models here.
@@ -52,10 +51,10 @@ class Neighborhood(models.Model):
 
 class Business(models.Model):
     business_name = models.CharField(max_length=100, unique= True)
-    business_user = models.ForeignKey(User,on_delete=models.CASCADE)
+    business_user = models.ForeignKey(User,on_delete=models.CASCADE
     business_neighborhood = models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE)
     business_email = models.EmailField(max_length=100, unique= True) 
-    
+
     
     def create_business(self):
         self.save()
@@ -82,13 +81,12 @@ class Business(models.Model):
 
 
 class Profile(models.Model):
-    profile_pic =CloudinaryField('image')
-    idNo = models.IntegerField(default=0)
-    bio = models.TextField()
-    status = models.BooleanField()
+    profile_pic =CloudinaryField('image')       
     user = models.OneToOneField(User,on_delete=models.CASCADE)
-    neighborhood = models.ForeignKey(Neighborhood,null=True, related_name='population', on_delete=models.CASCADE)
-
+    neighborhood = models.ForeignKey(Neighborhood,null=True, related_name='population', on_delete=models.CASCADE)    
+    email_address = models.EmailField(max_length=150, null=True)
+    status = models.BooleanField(null=True)
+    
     def __str__(self):
         return self.user.username
     # def save(self, *args, **kwargs):
@@ -111,8 +109,31 @@ class Profile(models.Model):
         search_result = cls.objects.filter(user__username__icontains=search_term)
         return search_result
 
+    @classmethod
+    def update_profile(cls,id,value):
+        cls.objects.filter(id=id).update(user_id = new_user)
+
+    
     def save_profile(self):
         self.save()
+
+    def delete_profile(self):
+        self.delete()
+
+    def __str__(self):
+        return self.user
+
+    def create_user_profile(sender, instance, created, **kwargs):
+	    if created:
+		    Profile.objects.create(user=instance)
+        
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
+        
+        
+        post_save.connect(create_user_profile, sender=User)
+        post_save.connect(save_user_profile, sender=User)
+
 
 
 class Post(models.Model):
@@ -120,9 +141,9 @@ class Post(models.Model):
     post_image = CloudinaryField('image')
     categories = models.CharField(max_length=70)
     time_created =  models.DateTimeField(auto_now=True, null =True)
-    location=models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    user_profile = models.ForeignKey(Profile, null=True, on_delete=models.CASCADE)
+    location=models.ForeignKey(Neighborhood, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.description

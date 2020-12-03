@@ -39,9 +39,14 @@ class HoodSerializer(serializers.ModelSerializer):
         model =  Neighborhood
         fields = ['name', 'location', 'count'] 
 
+class NeighborhoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  Neighborhood
+        fields = '__all__' 
+
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Post
+        model = Post
         fields=['description', 'post_image', 'categories']
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -50,3 +55,4 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['profile_pic', 'idNo', 'neighbourhood', 'status', 'user'] 
+

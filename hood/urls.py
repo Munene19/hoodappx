@@ -45,7 +45,11 @@ urlpatterns = [
     path('api/login/', LoginAPI.as_view(), name='login'),
     path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
+    path('hoodinfo/<str:pk>/', views.hoodDetail, name='hood-info'),
+    path('postcreate/', views.postCreate, name='post-create'),
 ]
 
 if settings.DEBUG:
     urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+

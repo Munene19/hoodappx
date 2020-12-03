@@ -3,7 +3,7 @@ from django.shortcuts import render
 from .models import Post, Profile, Neighborhood, Business
 from rest_framework import viewsets
 from rest_framework import permissions, status
-from .serializers import UserSerializer, UserRegistrationSerializer, HoodSerializer, PostSerializer
+from .serializers import *
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from .models import Profile, Neighborhood, Post
@@ -13,6 +13,10 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 from django.contrib.auth import login
 from .permissions import IsAdminOrReadOnly
+from rest_framework.decorators import api_view
+from django.http import JsonResponse
+
+
 
 def index(request):
     posts=Post.objects.all()
@@ -80,3 +84,20 @@ class LoginAPI(KnoxLoginView):
         user = serializer.validated_data['user']
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
+
+@api_view(['GET'])
+def hoodDetail(request, pk):
+    neighborhoods = Neighborhood.objects.get(id=pk)
+    serializer = NeighborhoodSerializer(neighborhoods)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def postCreate(request):
+    serializer = PostSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+

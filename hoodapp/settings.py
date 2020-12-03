@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
-
 from pathlib import Path
 import cloudinary
 import cloudinary.uploader
@@ -21,6 +20,7 @@ import os
 import django_heroku
 import dj_database_url
 from decouple import config,Csv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +42,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'hoodapp',
+    'hood',
+    'cloudinary',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -157,7 +159,6 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
@@ -188,6 +189,7 @@ REST_FRAMEWORK = {
 #     'JWT_EXPIRATION_DELTA': timedelta(days=2),
 # }
 
+# cloudinary configuration
 cloudinary.config( 
   cloud_name = "sawedee", 
   api_key = "616212518566398", 
