@@ -9,7 +9,6 @@ from django.dispatch import receiver
 class Neighborhood(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100, null=True)
-    posted_by =  models.CharField(max_length=100, null=True)
     count = models.IntegerField()
     police = models.CharField(max_length=100)
     police_department_address = models.CharField(max_length=100)
