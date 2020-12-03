@@ -66,7 +66,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'hood.urls'
+ROOT_URLCONF = 'hoodapp.urls'
 
 TEMPLATES = [
     {
@@ -84,7 +84,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'hood.wsgi.application'
+WSGI_APPLICATION = 'hoodapp.wsgi.application'
 
 
 # Database

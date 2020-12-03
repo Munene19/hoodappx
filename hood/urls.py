@@ -1,32 +1,51 @@
-"""hood URL Configuration
+from django.urls import include,path, re_path
+from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from rest_framework import routers 
+from .views import UserViewSet
+from knox import views as knox_views
+from .views import LoginAPI
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import path, include
+router=routers.DefaultRouter(trailing_slash=False)
+router.register('users', UserViewSet)
+
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 
+userSignup=UserViewSet.as_view({
+    'get':'list',
+    'post':'create'
+})
+
+userLogin=UserViewSet.as_view({
+    'get':'list',
+    'post':'list'
+})
+
+userDetail=UserViewSet.as_view({
+    'get':'retrieve'
+})
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('', include("hoodapp.urls")),
+    path('',views.index),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/signup/', userSignup, name='user_signup'),
+    path('auth/login/', userLogin, name='user_login'),
+    # path('auth/refresh-token/', refresh_jwt_token),
+    path('users/<int:pk>/', userDetail, name='user-detail'),
+    path('api/v1/', include(router.urls)),
+    path('hoods/',views.HoodList.as_view()),
+    path('api/v1/post/',views.PostList.as_view()),
+    path('api/login/', LoginAPI.as_view(), name='login'),
+    path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
+    path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
 ]
 
-admin.site.index_title="The Hoodappx"
-admin.site.site_header="The Hoodappx Admin"
-admin.site.site_title="The Hoodappx"
+if settings.DEBUG:
+    urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
