@@ -2,14 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from cloudinary.models import CloudinaryField
+from django.dispatch import receiver
 
 # Create your models here.
 
 class Neighborhood(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100, null=True)
-    posted_by =  models.CharField(max_length=100, null=True)
-    count = models.IntegerField(max_length=100)
+    count = models.IntegerField()
     police = models.CharField(max_length=100)
     police_department_address = models.CharField(max_length=100)
     health = models.CharField(max_length=100)
@@ -52,7 +52,7 @@ class Business(models.Model):
     business_name = models.CharField(max_length=100, unique= True)
     business_user = models.ForeignKey(User,on_delete=models.CASCADE)
     business_neighborhood = models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE) 
-    business_email = models.EmailField(max_length=100, unique= True) 
+    business_email = models.EmailField(max_length=100, null=True) 
     
     
     def create_business(self):
@@ -81,9 +81,10 @@ class Business(models.Model):
 
 class Profile(models.Model):
     profile_pic = CloudinaryField('image')
-    bio = models.TextField()
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    neighborhood = models.ForeignKey(Neighborhood,null=True, related_name='population', on_delete=models.CASCADE)
+    neighborhood = models.ForeignKey(Neighborhood, null=True, related_name='population', on_delete=models.CASCADE)
+    email_address = models.EmailField(max_length=150, null=True)
+    status = models.BooleanField(null=True)
 
     def __str__(self):
         return f'{self.user.username} Profile'
@@ -112,19 +113,16 @@ class Profile(models.Model):
     def __str__(self):
         return self.user
 
-    # def save_profile(self):
-    #     self.save()
-
-    # def create_user_profile(sender, instance, created, **kwargs):
-	#     if created:
-	# 	    Profile.objects.create(user=instance)
+    def create_user_profile(sender, instance, created, **kwargs):
+	    if created:
+		    Profile.objects.create(user=instance)
         
-    # def save_user_profile(sender, instance, **kwargs):
-    #     instance.profile.save()
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
         
         
-    #     post_save.connect(create_user_profile, sender=User)
-    #     post_save.connect(save_user_profile, sender=User)
+        post_save.connect(create_user_profile, sender=User)
+        post_save.connect(save_user_profile, sender=User)
 
 
 
