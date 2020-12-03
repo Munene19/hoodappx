@@ -17,9 +17,7 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 import os
-import django_heroku
-import dj_database_url
-from decouple import config,Csv
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -51,7 +49,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'corsheaders',
     'knox',
 ]
@@ -91,9 +88,12 @@ WSGI_APPLICATION = 'hoodapp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+import django_heroku
+import dj_database_url
+from decouple import config,Csv
 
 MODE=config("MODE", default="dev")
-DEBUG = config('DEBUG', default=False, cast=bool)
+SECRET_KEY = config('SECRET_KEY')
 # development
 if config('MODE')=="dev":
    DATABASES = {
@@ -115,7 +115,7 @@ else:
        )
    }
 
-db_from_env = dj_database_url.config(conn_max_age=500)
+db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())

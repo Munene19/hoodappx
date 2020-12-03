@@ -1,10 +1,9 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from .models import Post, Profile, Neighborhood, Business
-from rest_framework import viewsets
-from rest_framework import permissions, status
+from rest_framework import viewsets, permissions, status
 from .serializers import *
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import AllowAny
 from .models import Profile, Neighborhood, Post
 from rest_framework.response import Response
@@ -13,7 +12,6 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 from django.contrib.auth import login
 from .permissions import IsAdminOrReadOnly
-from rest_framework.decorators import api_view
 from django.http import JsonResponse
 
 

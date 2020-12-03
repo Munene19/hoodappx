@@ -51,7 +51,7 @@ class Neighborhood(models.Model):
 
 class Business(models.Model):
     business_name = models.CharField(max_length=100, unique= True)
-    business_user = models.ForeignKey(User,on_delete=models.CASCADE
+    business_user = models.ForeignKey(User,on_delete=models.CASCADE)
     business_neighborhood = models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE)
     business_email = models.EmailField(max_length=100, unique= True) 
 
