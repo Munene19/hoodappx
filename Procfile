@@ -1,1 +1,1 @@
-web: gunicorn hood.wsgi 
+web: gunicorn hoodapp.wsgi 
