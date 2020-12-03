@@ -1,7 +1,7 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from cloudinary.models import CloudinaryField
 from django.dispatch import receiver
 
 # Create your models here.
@@ -9,6 +9,7 @@ from django.dispatch import receiver
 class Neighborhood(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100, null=True)
+    posted_by =  models.CharField(max_length=100, null=True)
     count = models.IntegerField()
     police = models.CharField(max_length=100)
     police_department_address = models.CharField(max_length=100)
@@ -50,10 +51,10 @@ class Neighborhood(models.Model):
 
 class Business(models.Model):
     business_name = models.CharField(max_length=100, unique= True)
-    business_user = models.ForeignKey(User,on_delete=models.CASCADE)
-    business_neighborhood = models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE) 
-    business_email = models.EmailField(max_length=100, null=True) 
-    
+    business_user = models.ForeignKey(User,on_delete=models.CASCADE
+    business_neighborhood = models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE)
+    business_email = models.EmailField(max_length=100, unique= True) 
+
     
     def create_business(self):
         self.save()
@@ -80,14 +81,23 @@ class Business(models.Model):
 
 
 class Profile(models.Model):
-    profile_pic = CloudinaryField('image')
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    neighborhood = models.ForeignKey(Neighborhood, null=True, related_name='population', on_delete=models.CASCADE)
+    profile_pic =CloudinaryField('image')       
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    neighborhood = models.ForeignKey(Neighborhood,null=True, related_name='population', on_delete=models.CASCADE)    
     email_address = models.EmailField(max_length=150, null=True)
     status = models.BooleanField(null=True)
-
+    
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return self.user.username
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    # @receiver(post_save, sender=User)
+    # def create_user_profile(sender, instance, created, **kwargs):
+    #     if created:
+    #         Profile.objects.create(user=instance)
+    # @receiver(post_save, sender=User)
+    # def save_user_profile(sender, instance, **kwargs):
+    #     instance.profile.save()
 
     @property
     def image(self):
