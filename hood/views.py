@@ -98,14 +98,14 @@ def postCreate(request):
 
     return Response(serializer.data)
 
-@api_view(['POST'])
-@permission_classes([IsAdminUser])
-def hoodCreate(request, format=None):
-    serializer = NeighborhoodSerializer(data=request.data)
+# @api_view(['POST'])
+# @permission_classes([IsAdminUser])
+# def hoodCreate(request, format=None):
+#     serializer = NeighborhoodSerializer(data=request.data)
 
-    if serializer.is_valid():
-        serializer.save()
+#     if serializer.is_valid():
+#         serializer.save()
 
-    return Response(serializer.data)
+#     return Response(serializer.data)
 
 
