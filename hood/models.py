@@ -8,6 +8,7 @@ from django.dispatch import receiver
 
 class Neighborhood(models.Model):
     name = models.CharField(max_length=100)
+    hood_image = CloudinaryField('image') 
     location = models.CharField(max_length=100, null=True)
     count = models.IntegerField()
     police = models.CharField(max_length=100)

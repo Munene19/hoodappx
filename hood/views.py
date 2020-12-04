@@ -3,8 +3,8 @@ from django.shortcuts import render
 from .models import Post, Profile, Neighborhood, Business
 from rest_framework import viewsets, permissions, status
 from .serializers import *
-from rest_framework.decorators import action, api_view
-from rest_framework.permissions import AllowAny
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAdminUser
 from .models import Profile, Neighborhood, Post
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -92,6 +92,16 @@ def hoodDetail(request, pk):
 @api_view(['POST'])
 def postCreate(request):
     serializer = PostSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def hoodCreate(request, format=None):
+    serializer = NeighborhoodSerializer(data=request.data)
 
     if serializer.is_valid():
         serializer.save()

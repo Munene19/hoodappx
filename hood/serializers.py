@@ -4,8 +4,6 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import viewsets
 from .models import Neighborhood, Profile, Post
 
-
-
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
