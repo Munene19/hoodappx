@@ -74,7 +74,7 @@ class PostList(APIView):
         return Response(serializerdata.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginAPI(KnoxLoginView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny)
 
     def post(self, request, format=None):
         serializer = AuthTokenSerializer(data=request.data)
