@@ -6,7 +6,8 @@ from django.contrib.auth import views as auth_views
 from rest_framework import routers 
 from .views import UserViewSet
 from knox import views as knox_views
-from .views import LoginAPI
+from .views import LoginAPI, hoodDetail
+from django.views.decorators.csrf import csrf_exempt
 
 router=routers.DefaultRouter(trailing_slash=False)
 router.register('users', UserViewSet)
@@ -41,13 +42,13 @@ urlpatterns = [
     path('users/<int:pk>/', userDetail, name='user-detail'),
     path('api/v1/', include(router.urls)),
     path('hoods/',views.HoodList.as_view()),
-    path('api/v1/post/',views.PostList.as_view()),
+    # path('api/v1/post/',views.PostList.as_view()),
     path('api/login/', LoginAPI.as_view(), name='login'),
     path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
-    path('hoodinfo/<str:pk>/', views.hoodDetail, name='hood-info'),
-    path('postcreate/', views.postCreate, name='post-create'),
-    path('hoodcreate/', views.hoodCreate, name='hood-create')
+    path('api/v1/view_hood/<str:pk>/', views.hoodDetail, name='hood-info'),
+    # path('api/v1/profile/', csrf_exempt(views.CreatePost.as_view), name='post-create'),
+    # path('api/hoodcreate/', views.hoodCreate, name='hood-create')
 ]
 
 if settings.DEBUG:

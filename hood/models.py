@@ -67,10 +67,9 @@ class Business(models.Model):
         choices = BUSINESS_CHOICES, 
         default = '1'
         )
-    business_neighborhood = models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE)
+    business_location = models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE)
     phone_number = models.IntegerField(null=True)
     business_email = models.EmailField(max_length=100, unique= True) 
-    business_location = models.CharField (max_length=100, null=True)
 
     
     def create_business(self):
@@ -153,12 +152,14 @@ class Profile(models.Model):
 
 
 
+
 class Post(models.Model):
-    description =  models.CharField(max_length=70)
+    post_title = models.CharField(max_length=100, null=True)
     post_image = CloudinaryField('image')
+    description =  models.CharField(max_length=70)    
     categories = models.CharField(max_length=70)
-    time_created =  models.DateTimeField(auto_now=True, null =True)
-    location=models.ForeignKey(Neighborhood, on_delete=models.CASCADE)
+    time_created =  models.DateTimeField(auto_now=True, null=True)
+    location = models.ForeignKey(Neighborhood, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     user_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     
