@@ -169,19 +169,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 django_heroku.settings(locals())
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'knox.auth.TokenAuthentication',
-    ),
-
-    # 'NON_FIELD_ERRORS_KEY': 'global',
+        'rest_framework.authentication.TokenAuthentication',
+    )
 }
+
 
 # JWT_AUTH = {
 #     'JWT_ALLOW_REFRESH': True,

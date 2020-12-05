@@ -47,7 +47,7 @@ urlpatterns = [
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
     path('hoodinfo/<str:pk>/', views.hoodDetail, name='hood-info'),
     path('postcreate/', views.postCreate, name='post-create'),
-    # path('hoodcreate/', views.hoodCreate, name='hood-create')
+    path('hoodcreate/', views.hoodCreate, name='hood-create')
 ]
 
 if settings.DEBUG:

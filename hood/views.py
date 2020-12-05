@@ -4,7 +4,7 @@ from .models import Post, Profile, Neighborhood, Business
 from rest_framework import viewsets, permissions, status
 from .serializers import *
 from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 from .models import Profile, Neighborhood, Post
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -74,7 +74,7 @@ class PostList(APIView):
         return Response(serializerdata.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginAPI(KnoxLoginView):
-    permission_classes = (permissions.AllowAny)
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
         serializer = AuthTokenSerializer(data=request.data)
@@ -98,14 +98,14 @@ def postCreate(request):
 
     return Response(serializer.data)
 
-# @api_view(['POST'])
-# @permission_classes([IsAdminUser])
-# def hoodCreate(request, format=None):
-#     serializer = NeighborhoodSerializer(data=request.data)
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def hoodCreate(request, format=None):
+    serializer = NeighborhoodSerializer(data=request.data)
 
-#     if serializer.is_valid():
-#         serializer.save()
+    if serializer.is_valid():
+        serializer.save()
 
-#     return Response(serializer.data)
+    return Response(serializer.data)
 
 

@@ -8,7 +8,7 @@ from django.dispatch import receiver
 
 class Neighborhood(models.Model):
     name = models.CharField(max_length=100)
-    hood_image =CloudinaryField('image') 
+    hood_image =CloudinaryField('image',  null=True) 
     location = models.CharField(max_length=100, null=True)
     count = models.IntegerField()
     police = models.CharField(max_length=100)
@@ -48,12 +48,29 @@ class Neighborhood(models.Model):
         all_objects = Neighborhood.objects.all()
         for item in all_objects:
             return item
-
+ 
 class Business(models.Model):
+# specifying business choices  
+    BUSINESS_CHOICES = (
+        ("1", "Banking and Finance"), 
+        ("2", "Food and Drinks"), 
+        ("3", "Groceries"), 
+        ("4", "Beauty parlour"), 
+        ("5", "Barber shop"), 
+        ("6","Electronics")
+        )
     business_name = models.CharField(max_length=100, unique= True)
     business_user = models.ForeignKey(User,on_delete=models.CASCADE)
+    business_image =CloudinaryField('image', null=True) 
+    business_category = models.CharField( 
+        max_length = 20, 
+        choices = BUSINESS_CHOICES, 
+        default = '1'
+        )
     business_neighborhood = models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE)
+    phone_number = models.IntegerField(null=True)
     business_email = models.EmailField(max_length=100, unique= True) 
+    business_location = models.CharField (max_length=100, null=True)
 
     
     def create_business(self):
