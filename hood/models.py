@@ -25,6 +25,8 @@ class UserManager(BaseUserManager):
         print("password...",password)
         return self._create_user(email, password=password, **extra_fields)
 
+    
+
 class Neighborhood(models.Model):
     name = models.CharField(max_length=100)
     hood_image =CloudinaryField('image',  null=True) 
@@ -34,6 +36,7 @@ class Neighborhood(models.Model):
     police_department_address = models.CharField(max_length=100)
     health = models.CharField(max_length=100)
     health_department_address = models.CharField(max_length=100)
+
 
 
     def __str__(self):
@@ -67,6 +70,23 @@ class Neighborhood(models.Model):
         all_objects = Neighborhood.objects.all()
         for item in all_objects:
             return item
+
+class Vacanthouses(models.Model):
+    vacant_house_number = models.IntegerField() 
+    vacant_house_pic = CloudinaryField('image',  null=True)
+    vacant_house_description = models.CharField(max_length=100)
+    location = models.ForeignKey(Neighborhood, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f' {self.name} Vacanthouses'
+
+
+    def add_vacanthouse(self):
+        self.save()
+
+    def delete_vacanthouse(self):
+        self.delete()
+
  
 class Business(models.Model):
 # specifying business choices  

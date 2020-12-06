@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render
-from hood.models import Post, Profile, Neighborhood, Business
+from hood.models import Post, Profile, Neighborhood, Business, Vacanthouses
 from rest_framework import viewsets, permissions, status
 from .serializers import *
 from rest_framework.decorators import action, api_view, permission_classes
@@ -59,7 +59,6 @@ class ProfileList(APIView):
         else:
             return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@login_required
 def joinhood(request, id):
     current_user = request.user
     form = NeighborhoodForm() 
@@ -110,6 +109,10 @@ class PostViewSet(viewsets.ModelViewSet):
 class BusinessViewSet(viewsets.ModelViewSet):
     queryset = Business.objects.all()
     serializer_class = BusinessSerializer
+
+class VacanthouseViewSet(viewsets.ModelViewSet):
+    queryset = Vacanthouses.objects.all()
+    serializer_class = VacanthousesSerializer
 
           
 @api_view(['GET'])

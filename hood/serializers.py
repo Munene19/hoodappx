@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from rest_framework import viewsets
-from .models import Neighborhood, Profile, Post, Business
+from .models import Neighborhood, Profile, Post, Business, Vacanthouses
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -41,6 +41,11 @@ class NeighborhoodSerializer(serializers.ModelSerializer):
     class Meta:
         model =  Neighborhood
         fields = '__all__' 
+
+class VacanthousesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vacanthouses
+        fields = ['vacant_house_number', 'vacant_house_pic', 'vacant_house_description', 'location']
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
