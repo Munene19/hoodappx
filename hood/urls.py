@@ -38,6 +38,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/signup/', userSignup, name='user_signup'),
     path('auth/login/', userLogin, name='user_login'),
+    path('joinhood/', views.joinhood, name='join_hood'),
     # path('auth/refresh-token/', refresh_jwt_token),
     path('users/<int:pk>/', userDetail, name='user-detail'),
     path('api/v1/', include(router.urls)),

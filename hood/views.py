@@ -59,6 +59,25 @@ class ProfileList(APIView):
         else:
             return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
+def joinhood(request, id):
+    current_user = request.user
+    form = NeighborhoodForm() 
+    
+    if request.method == 'POST':
+        form = NeighborhoodForm(request.POST, request.FILES)
+        if form.is_valid():
+            neighborhood = form.save(commit=False)
+            return(neighborhood)
+            neighborhood.user_id =request.user.id
+            neighborhood.save()
+
+        return redirect(index)
+
+    else:
+        form = NeighborhoodForm()                    
+        
+    return render({"user": current_user, "form": form}) 
+
 class HoodList(APIView):
     def get(self,request,format = None):
         all_hoods = Neighborhood.objects.all()
@@ -86,6 +105,11 @@ class LoginAPI(KnoxLoginView):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+class BusinessViewSet(viewsets.ModelViewSet):
+    queryset = Business.objects.all()
+    serializer_class = BusinessSerializer
+
           
 @api_view(['GET'])
 def hoodDetail(request, pk):
@@ -97,4 +121,6 @@ def hoodDetail(request, pk):
 class NeighborhoodViewSet(viewsets.ModelViewSet):
     queryset = Neighborhood.objects.all()
     serializer_class = NeighborhoodSerializer
+
+
 
