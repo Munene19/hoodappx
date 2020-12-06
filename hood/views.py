@@ -59,6 +59,7 @@ class ProfileList(APIView):
         else:
             return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@login_required
 def joinhood(request, id):
     current_user = request.user
     form = NeighborhoodForm() 
