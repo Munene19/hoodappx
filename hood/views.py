@@ -121,6 +121,7 @@ def hoodDetail(request, pk):
     serializer = NeighborhoodSerializer(neighborhoods)
     return Response(serializer.data)
 
+
 @permission_classes([IsAdminUser])
 class NeighborhoodViewSet(viewsets.ModelViewSet):
     queryset = Neighborhood.objects.all()

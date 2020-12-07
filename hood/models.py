@@ -176,7 +176,7 @@ class Profile(models.Model):
         self.delete()
 
     def __str__(self):
-        return self.user
+        return self.user.username
 
     def create_user_profile(sender, instance, created, **kwargs):
 	    if created:
@@ -204,13 +204,21 @@ class Profile(models.Model):
 
 
 class Post(models.Model):
+    POST_CATEGORIES = (
+        ("1", "Business"), 
+        ("2", "Informative"), 
+        ("3", "Leisure"), 
+        )
     post_title = models.CharField(max_length=100, null=True)
     post_image = CloudinaryField('image')
     description =  models.CharField(max_length=70)    
-    categories = models.CharField(max_length=70)
+    categories = models.CharField( 
+        max_length = 20, 
+        choices = POST_CATEGORIES, 
+        default = '1'
+        )
     time_created =  models.DateTimeField(auto_now=True, null=True)
     location = models.ForeignKey(Neighborhood, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     user_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     
     def __str__(self):
